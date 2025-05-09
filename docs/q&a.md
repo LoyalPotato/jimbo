@@ -90,7 +90,7 @@ I saw it in a [video](https://youtu.be/e87qKixKFME?si=MPWchEk8D9ht7YC7), being u
 
 > https://stackoverflow.com/questions/43651954/what-is-a-clock-cycle-and-clock-speed
 
-## What's the Program Counter for?
+## (TODO: Go deeper in its workings) What's the Program Counter for?
 
 Register that holds the memory address of the **next** instruction to be executed.
 After handling the instruction, the PC will be moved to a specific pointer or branch to a specific pointer, which will be handled in the next cycle.
@@ -128,9 +128,33 @@ In the control unit.
 
 Software that turns assembly code into machine/binary code.
 
-## What's an dissassembler?
+## What's an disassembler?
 
 It does the opposite of the assembler; it turns the machine binary code into assembly language.
+
+## What's the CPU clock?
+
+A device which produces an oscillating signal (high/low).
+
+## TODO What's the stack pointer for?
+
+## Do all CPU have a control unit?
+
+## TODO How do 8-bit CPUs handle multi-byte instructions?
+
+> https://stackoverflow.com/questions/19320201/z80-instruction-register-size
+> https://www.reddit.com/r/learnprogramming/comments/coynix/how_do_8bit_computers_deal_with_8bit_opcodes_and/
+
+## Is the assumption that the program counter is incremented when doing multi byte fetches correct?
+
+Yes
+
+## In the Z80, when doing relative jumps, it can take 2-3 machine codes depending on the outcome. Why do we need 2 cycles if we can access the flags before fetching the operand (offset)?
+
+It seems like it's just a simple design decision, that stems from the fact that it doesn't take much compute to discard it as it does to use it. This means that we can just fetch it, use it if needed or not if it's not.
+
+> https://retrocomputing.stackexchange.com/questions/22023/why-does-the-z80-jp-absolute-instruction-always-take-10-states-to-execute
+> LLM prompt: why does JR cc,n16 in z80 take 3 machine cycles -> why does it need to fetch the operand if we can check the flags before
 
 # Q&A - GB
 
@@ -147,3 +171,23 @@ They are two 8 bit registers, which can be used as a single 16 bit one.
 ## What's immediate in the context of the instruction set?
 
 ## Does the GB always start at BootROM location?
+
+## In the tech ref. for the GB, there's a PHI 1 MiHz. What does it mean?
+
+It's a clock input.
+
+## On the tetris disassembly with mgbdis tool, there's a .map file and there's content before the 0x1000 address. What's its purpose? And when does it run? What's the point of the data before the cartridge header? If the PC starts at 0x0100, then this would never run no?
+
+## How're negative numbers handled? I read in the ref inside this question that it uses two's complement, but how do we know when we want a negative number or not?
+
+> https://stackoverflow.com/questions/3434654/immediate-data-in-assembly
+
+## What's a memory bank controller?
+
+## Does the ALU use some temporary storage for some internal operations?
+
+I had some doubts as to what holds the values of intermediate storage, like in relative jump instructions, that need to add an offset to the PC and if I used the A register, then in the boot rom, it'd override the previously calculated storage.
+
+Looking around I found some references to WZ, but specific to the Z80, so I still had some doubts about its existance in the GB DMG CPU. I finally found some concrete evidence from gekkio's [tweet](https://x.com/gekkio/status/1584236637932126208) (and [here](https://gekkio.fi/blog/2022/8-years-of-game-boy-tweets/)) where he shows the registers in the CPU, WZ included! This makes sense because in his reference, on the JR pseudo code, he makes use of Z & W variable names, but I assumed that it was just a generic temporary value.
+
+> https://gist.github.com/SonoSooS/c0055300670d678b5ae8433e20bea595
